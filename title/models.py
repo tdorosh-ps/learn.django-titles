@@ -26,8 +26,9 @@ class IncomingLetter(models.Model):
 
 
 class OutgoingLetter(model.Models):
-	pass
-	
+	sending_date = models.DateField(verbose_name='Дата реєстрації листа', default=datetime.date.today)
+	sending_number= models.CharField(verbose_name='Реєстраційний номер', max_length = 50)
+	receiver = models.ManyToManyField('Counterparty', verbose_name='Отримувач', on_delete=models.PROTECT)
 	
 class Counterparty(model.Models):
 	name = models.CharField(verbose_name = 'Назва контрагента', max_length = 256)
