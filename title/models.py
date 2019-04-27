@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.utils import timezone
 # Create your models here.
@@ -14,12 +16,13 @@ class Title(models.Model):
 	outcoming_letter = models.ManyToManyField('OutcomingLetter', verbose_name='Вихідний супроводжувальний лист', blank=True, null=True)
 	is_done = models.Boolean(vervose_name = 'Виконано', default=False)
 	notes = models.TextField(verbose_name='Примітки', blank=True, null=True)
-	entry_datetime = models.DateTimeFiled(verbose_name='Дата занесення в базу даних', default=timezone.now)
+	entry_datetime = models.DateTimeFiled(verbose_name='Дата і час занесення в базу даних', default=timezone.now)
 	
 	
 class IncomingLetter(models.Model):
-	pass
-	
+	receiving_date = models.DateField(verbose_name='Дата реєстрації листа', default=datetime.date.today)
+	receiving_number = models.CharField(verbose_name='Реєстраційний номер', max_length = 50)
+	sender = models.ForeignKey('Counterparty', verbose_name='Відправник', on_delete=models.PROTECT)
 
 
 class OutgoingLetter(model.Models):
