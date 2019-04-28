@@ -1,0 +1,9 @@
+{% if titles %}
+	<ul>
+	{% for title in titles %}
+		<li>{{title.title}}</li>
+	{% endfor %}
+	</ul>
+	{% else %}
+		<p>Поки що немає титулів</p>
+{% endif %}

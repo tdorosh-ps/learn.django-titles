@@ -1,10 +1,10 @@
 from django.shortcuts import render
-from models import Title
+from .models import Title
 # Create your views here.
 
 def titles_list(request):
 	titles = Title.objects.all()
-	return render(request, 'titles/titles_list', {'titles': titles})
+	return render(request, 'title/titles_list.html', {'titles': titles})
 	
 	
 def title_add(request):
