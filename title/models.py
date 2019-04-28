@@ -8,23 +8,24 @@ class Title(models.Model):
 		('OB', "Титул об'єкта будівництва"),
 		('PVR', 'Титул на проектно-вишукуальні роботи'),
 	)
-	title = models.CharField(verbose_name='Назва титулу', max_length=256)
+		
+	title = models.TextField(verbose_name='Назва титулу')
 	type = models.CharField(verbose_name='Тип титулу', max_length=3, choices=TITLE_TYPES)
 	client = models.ForeignKey('Counterparty', verbose_name='Замовник', on_delete=models.PROTECT)
-	ministry_agreement = models.BooleanField(default=True)
-	incoming_letter = models.ManyToManyField('IncomingLetter', verbose_name='Вхідний супрводжувальний лист', blank=True)
-	outgoing_letter = models.ManyToManyField('OutgoingLetter', verbose_name='Вихідний супроводжувальний лист', blank=True)
+	ministry_agreement = models.BooleanField(verbose_name='Погодження Міністерства', default=True)
+	incoming_letter = models.ManyToManyField('IncomingLetter', verbose_name='Вхідний(і) лист(и)', blank=True)
+	outgoing_letter = models.ManyToManyField('OutgoingLetter', verbose_name='Вихідний(і) лист(и)', blank=True)
 	is_done = models.BooleanField(verbose_name = 'Виконано', default=False)
 	notes = models.TextField(verbose_name='Примітки', blank=True, null=True)
 	entry_datetime = models.DateTimeField(verbose_name='Дата і час занесення в базу даних', default=timezone.now)
 	
 	class Meta(object):
-		ordering = ['entry_datetime', 'is_done']
+		ordering = ['-entry_datetime', 'is_done']
 		verbose_name = 'Титул'
 		verbose_name_plural = 'Титули'
 	
 	def __str__(self):
-		return 'Титул {} Замовник {}'.format(self.title, self.client)
+		return '{} Замовник {}'.format(self.title, self.client)
 	
 class IncomingLetter(models.Model):
 	receiving_date = models.DateField(verbose_name='Дата реєстрації листа', default=datetime.date.today)
@@ -42,7 +43,7 @@ class IncomingLetter(models.Model):
 class OutgoingLetter(models.Model):
 	sending_date = models.DateField(verbose_name='Дата реєстрації листа', default=datetime.date.today)
 	sending_number= models.CharField(verbose_name='Реєстраційний номер', max_length = 50)
-	receiver = models.ManyToManyField('Counterparty', verbose_name='Отримувач')
+	receiver = models.ForeignKey('Counterparty', verbose_name='Отримувач', on_delete=models.PROTECT)
 	
 	class Meta(object):
 		ordering = ['sending_date']
