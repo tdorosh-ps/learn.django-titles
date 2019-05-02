@@ -3,13 +3,10 @@ from django.views import generic
 from .models import Title
 # Create your views here.
 
-class TitleView(generic.ListView):
-	template_name = 'title/titles_list.html'
-	context_object_name = 'titles'
-	
-	def get_queryset(self):
-		return Title.objects.all()
-	
+def title_list(request):
+	titles = Title.objects.all()
+	titles_dates_unique = titles.dates('entry_datetime', 'year')
+	return render(request, 'title/titles_list.html', {'titles': titles, 'titles_dates_unique': titles_dates_unique})
 	
 def title_add(request):
 	pass

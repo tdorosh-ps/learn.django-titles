@@ -29,6 +29,20 @@
 	  </div>
 	  
 	  <div class='row'>
+		<div class='col-xs-12'>
+		  <form action="" method='GET'>
+		  {% csrf_token %}
+		     Рік <select>
+			  {% for date in titles_dates_unique %}
+			  <option value='{{ date.year }}'>{{ date.year }}</option>
+			  {% endfor %}
+			</select>
+			<input type='submit' value='Застосувати'>
+		  </form>
+		</div>
+	  </div>
+	  
+	  <div class='row'>
 	    <div class='col-xs-12'>
           <table class='table table-bordered table-hover'>
 	        <thead>
