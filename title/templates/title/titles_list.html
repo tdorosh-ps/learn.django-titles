@@ -1,97 +1,67 @@
-<!DOCTYPE html>
+{% extends 'title/base.html' %}
 
-<html lang='uk'>
+{% block meta_title %} Облік титулів будівництва {% endblock meta_title %}
+{% block title_page %} Облік титулів будівництва {% endblock title_page %}
 
-  <head>
+{% block content %} 
+
+<a class='btn btn-primary' href='{% url "title:title_add" %}'>Додати Титул</a>
+
+<div class='row'>
+
+  <div class='col-xs-12'>Панель фільтрації та пошуку</div>
   
-    <meta charset='UTF-8'>
-    <title>Облік титулів будівництва об'єктів</title>
-	<meta name='description' value="Облік титулів будівництва об'єктів">
-	<meta name='viewport' content='width=device-width, initial-scale=1'>
-	
-	<!--Include styles-->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
-		crossorigin="anonymous">
-		
-  </head>
-  
-  <body>
-    {% if titles %}
-	<div class='container'>
-	
-	  <div class='row'>
-	    <div class='col-xs-12'><h1>Облік титулів будівництва</h1></div>
-	  </div>
+</div>
 	  
-	  <div class='row'>
-		<div class='col-xs-12'>Панель фільтрації та пошуку</div>
-	  </div>
+<div class='row'>
+  <div class='col-xs-12'>
+    <form action="" method='GET'>
+	{% csrf_token %}
+	  Рік <select>
+	    {% for date in titles_dates_unique %}
+		  <option value='{{ date.year }}'>{{ date.year }}</option>
+		{% endfor %}
+		</select>
+		<input type='submit' value='Застосувати'>
+	</form>
+  </div>
+</div>
+{% if titles %}
+<div class='row'>
+  <div class='col-xs-12'>
+    <table class='table table-bordered table-hover'>
+	  <thead>
+	    <tr class='table-primary'>
+		  <td>№</td>
+		  <td>Назва титулу</td>
+		  <td>Тип титулу</td>
+		  <td>Замовник</td>
+		  <td>Погодження Міністерства</td>
+		  <td>Виконано</td>
+		  <td>Примітки</td>
+		</tr>
+	  </thead>
 	  
-	  <div class='row'>
-		<div class='col-xs-12'>
-		  <form action="" method='GET'>
-		  {% csrf_token %}
-		     Рік <select>
-			  {% for date in titles_dates_unique %}
-			  <option value='{{ date.year }}'>{{ date.year }}</option>
-			  {% endfor %}
-			</select>
-			<input type='submit' value='Застосувати'>
-		  </form>
-		</div>
-	  </div>
-	  
-	  <div class='row'>
-	    <div class='col-xs-12'>
-          <table class='table table-bordered table-hover'>
-	        <thead>
-	          <tr class='table-primary'>
-		        <td>№</td>
-		        <td>Назва титулу</td>
-		        <td>Тип титулу</td>
-		        <td>Замовник</td>
-		        <td>Погодження Міністерства</td>
-		        <td>Виконано</td>
-		        <td>Примітки</td>
-		      </tr>
-	        </thead>
-	  
-	        <tbody>
-	        {% for title in titles %}
-	          <tr>
-		        <td>{{ forloop.counter}}</td>
-		        <td>{{ title.title }}</td>
-		        <td>{{ title.get_type_display }}</td>
-		        <td>{{ title.client }}</td>
-		        <td>{{ title.ministry_agreement }}</td>
-		        <td>{{ title.is_done }}</td>
-		        <td>{{ title.notes }}</td>
-		      </tr>
+	  <tbody>
+	  {% for title in titles %}
+	    <tr>
+		  <td>{{ forloop.counter}}</td>
+		   <td><a href='{% url "title:title_edit" title.id %}'>{{ title.title }}</a></td>
+		   <td>{{ title.get_type_display }}</td>
+		   <td>{{ title.client }}</td>
+		   <td>{{ title.ministry_agreement }}</td>
+		   <td>{{ title.is_done }}</td>
+		   <td>{{ title.notes }}</td>
+		</tr>
 	    
-	        {% endfor %}
-	        </tbody>
+	  {% endfor %}
+	  </tbody>
 	
 	
-	      </table>
-	      {% else %}
-	      <p>Тут поки що немає титулів.</p>
-	      {% endif %}
-	    </div>
-	  </div>
-	  
-	</div>
-  
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
-		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" 
-		crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
-		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" 
-		crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
-	integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" 
-	crossorigin="anonymous"></script>
-  
-  </body>
-
-</html>
+	</table>
+	{% else %}
+	  <p>Тут поки що немає титулів.</p>
+	{% endif %}
+  </div>
+</div>
+{% endblock content %}

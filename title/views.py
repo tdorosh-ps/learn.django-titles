@@ -9,11 +9,12 @@ def title_list(request):
 	return render(request, 'title/titles_list.html', {'titles': titles, 'titles_dates_unique': titles_dates_unique})
 	
 def title_add(request):
-	pass
+	return render(request, 'title/title_add.html', {})
 	
+def title_edit(request, pk):
+	title = Title.objects.get(pk=pk)
+	return render(request, 'title/title_edit.html', {'title': title})
 	
-def title_edit(request):
-	pass
-	
-def title_delete(request):
-	pass
+def title_delete(request, pk):
+	title = Title.objects.get(pk=pk)
+	return render(request, 'title/title_delete.html', {'title': title})
