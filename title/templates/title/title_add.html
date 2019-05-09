@@ -4,5 +4,77 @@
 {% block title_page %} Додати Титул {% endblock title_page %}
 
 {% block content %} 
-Тут буде форма додавання титулів
+<form action='{% url "title:title_add" %}' method='POST' enctype='multipart/form-data'>
+{% csrf_token %}
+  
+  <div>
+    <label for='title'>Назва титулу</label>
+	<textarea id='title' name='title'></textarea>
+	<span>{{ errors.title }}</span>
+  </div>
+  
+  <div>
+   <label for='type'>Виберіть тип титулу</label>
+   <select id='type' name='type'>
+    <option value='OB'>Титул будівництва</option>
+	<option value='PVR'>Титул на проектно-вишукувальні роботи</option>
+   </select>
+  </div>
+  
+  <div>
+    <label for='client'>Виберіть замовника</label>
+	<select id='client' name='client'>
+	  {% for client in clients %}
+	  <option value='{{ client.client_id }}'>{{ client.client__name }}</option>
+	  {% endfor %}
+	</select>
+  </div>
+  
+  <div>
+    <label for='agreement'>Чи необхідне погодження Мінприроди?</label>
+	<input type='checkbox' id='agreement' name='agreement' checked>
+  </div>
+  
+  <div>
+    <label for='incoming_letter'>Виберіть або додайте супроводжувальний вхідний лист</label>
+	<select id='incoming_letter' name='incoming_letter' multiple>
+	{% for inletter in inletters %}
+	  <option value='{{ inletter.id }}'>{{ inletter }}</option>
+	{% endfor %}
+	</select>
+  </div>
+  
+  <div>
+    <label for='outgoing_letter'>Виберіть або додайте супроводжувальний вихідний лист</label>
+	<select id='outgoing_letter' name='outgoing_letter' multiple>
+	{% for outletter in outletters %}
+	  <option value='{{ outletter.id  }}'>{{ outletter }}</option>
+	{% endfor %}
+	</select>
+  </div>
+  
+  <div>
+    <label for='done'>Виконано?</label>
+	<input type='checkbox' id='done' name='done'>
+  </div>
+  
+  <div>
+    <label for='date'>Примітки</label>
+	<textarea id='notes' name='notes'></textarea>
+  </div>
+  
+  <div>
+    <label for='date'>Введіть дату та час</label>
+	<input type='date' id='date' name='date'>
+	<span>{{ errors.date }}</span>
+  </div>
+  
+  <div>
+    <input type='submit' value='Занести в базу даних' id='submit_button' name='submit_button'>
+    <button type='submit' id='cancel_button' name='cancel_button'>Відмінити</button>
+  </div>
+
+
+
+</form>
 {% endblock content %}

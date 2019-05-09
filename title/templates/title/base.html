@@ -23,8 +23,17 @@
     <div class='container'>
 	
 	  <div class='row'>
-	    <div class='col-xs-12'><h1>{% block title_page %} {% endblock title_page %}</h1></div>
+	    <div class='col'><h1>{% block title_page %} {% endblock title_page %}</h1></div>
 	  </div>
+	  
+	  
+	  {% block status_message %}
+	  {% if request.GET.status_message %}
+	  <div class='row'>
+		<div class='col'>{{ request.GET.status_message }}</div>
+	  </div>
+	  {% endif %}
+	  {% endblock %}
   
     {% block content %} 
 	
