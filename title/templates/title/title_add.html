@@ -4,7 +4,7 @@
 {% block title_page %} Додати Титул {% endblock title_page %}
 
 {% block content %} 
-<form action='{% url "title:title_add" %}' method='POST' enctype='multipart/form-data'>
+<form action='{% url "title:title_add" %}' method='POST'>
 {% csrf_token %}
   
   <div>

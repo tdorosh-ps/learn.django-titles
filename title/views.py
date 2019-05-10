@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django import forms
 from .models import Title, IncomingLetter, OutgoingLetter, Counterparty
 # Create your views here.
 
@@ -108,6 +109,27 @@ def title_add(request):
 				return HttpResponseRedirect('{}?status_message=Титул успішно додано'.format(reverse('title:home')))
 			
 	return render(request, 'title/title_add.html', {'titles': titles, 'clients': clients, 'inletters': inletters, 'outletters': outletters})
+	
+	
+class TitleEditForm(forms.Form):
+	titles = Title.objects.all()
+	clients = get_unique_list_elements(titles.values("client_id", "client__name"))
+	inletters = IncomingLetter.objects.all()
+	outletters = OutgoingLetter.objects.all()
+	TITLE_TYPES = (
+		('OB', "Титул об'єкта будівництва"),
+		('PVR', 'Титул на проектно-вишукуальні роботи'),
+	)
+	title = forms.CharField(label='Назва титулу', strip=True, min_length=20)
+	type = forms.ChoiceField(label='Тип титулу', choices=TITLE_TYPES)
+	client = forms.ModelChoiceField(label='Замовник', queryset=clients)
+	incoming_letters = forms.ModelMultipleChoiceField(label='Вхідні листи', required=False, queryset=inletters)
+	outgoing_letters = forms.ModelMultipleChoiceField(label='Вхідні листи', required=False, queryset=outletters)
+	agreement = forms.BooleanField(label='Погодження міністерства', required=False)
+	done = forms.BooleanField(label='Виконано', required=False)
+	notes = forms.CharField(label='Примітки', strip=True, required=False)
+	datetime = forms.DateTimeField(label='Дата і час занесення в базу', input_formats='%m/%d/%Y %H:%M:%S')
+	
 	
 def title_edit(request, pk):
 	title = Title.objects.get(pk=pk)
