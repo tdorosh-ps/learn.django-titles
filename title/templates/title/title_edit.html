@@ -4,5 +4,9 @@
 {% block title_page %} Редагувати Титул {% endblock title_page %}
 
 {% block content %} 
-Тут буде форма редагування титулу {{title}}
+<form action='{% url "title:title_edit" title.id %}' method='POST'>
+{% csrf_token %}
+  {{ form.as_p }}
+  <input type='submit' value='Внести зміни' id='submit_button' name='submit_button'>
+</form>
 {% endblock content %}

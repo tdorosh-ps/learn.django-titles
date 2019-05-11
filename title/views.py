@@ -113,27 +113,50 @@ def title_add(request):
 	
 class TitleEditForm(forms.Form):
 	titles = Title.objects.all()
-	clients = get_unique_list_elements(titles.values("client_id", "client__name"))
+	clients = Counterparty.objects.all()
 	inletters = IncomingLetter.objects.all()
 	outletters = OutgoingLetter.objects.all()
 	TITLE_TYPES = (
 		('OB', "Титул об'єкта будівництва"),
 		('PVR', 'Титул на проектно-вишукуальні роботи'),
 	)
-	title = forms.CharField(label='Назва титулу', strip=True, min_length=20)
+	title = forms.CharField(label='Назва титулу', strip=True, min_length=20, widget=forms.Textarea)
 	type = forms.ChoiceField(label='Тип титулу', choices=TITLE_TYPES)
 	client = forms.ModelChoiceField(label='Замовник', queryset=clients)
 	incoming_letters = forms.ModelMultipleChoiceField(label='Вхідні листи', required=False, queryset=inletters)
-	outgoing_letters = forms.ModelMultipleChoiceField(label='Вхідні листи', required=False, queryset=outletters)
+	outgoing_letters = forms.ModelMultipleChoiceField(label='Вихідні листи', required=False, queryset=outletters)
 	agreement = forms.BooleanField(label='Погодження міністерства', required=False)
 	done = forms.BooleanField(label='Виконано', required=False)
-	notes = forms.CharField(label='Примітки', strip=True, required=False)
-	datetime = forms.DateTimeField(label='Дата і час занесення в базу', input_formats='%m/%d/%Y %H:%M:%S')
+	notes = forms.CharField(label='Примітки', strip=True, required=False, widget=forms.Textarea)
+	datetime = forms.DateTimeField(label='Дата і час занесення в базу')
 	
 	
-def title_edit(request, pk):
-	title = Title.objects.get(pk=pk)
-	return render(request, 'title/title_edit.html', {'title': title})
+def title_edit(request, title_id):
+	title = Title.objects.get(pk=title_id)
+	if request.method == 'POST':
+		form = TitleEditForm(request.POST)
+		if form.is_valid():
+			title.title = form.cleaned_data['title']
+			title.type = form.cleaned_data['type']
+			title.client = form.cleaned_data['client']
+			title.incoming_letter.set(form.cleaned_data['incoming_letters'])
+			title.outgoing_letter.set(form.cleaned_data['outgoing_letters'])
+			title.ministry_agreement = form.cleaned_data['agreement']
+			title.is_done = form.cleaned_data['done']
+			title.notes = form.cleaned_data['notes']
+			title.entry_datetime = form.cleaned_data['datetime']
+			title.save()
+			return HttpResponseRedirect('{}?status_message=Титул успішно відредаговано'.format(reverse('title:home')))
+	
+	else:
+		form = TitleEditForm(initial={'title': title.title, 'type': title.type, 
+				'client': title.client, 'incomimg_letters': title.incoming_letter,
+				'agreement': title.ministry_agreement, 'done': title.is_done,
+				'notes': title.notes, 'datetime': title.entry_datetime,
+				'incoming_letters': title.incoming_letter.all(), 'outgoing_letters': title.outgoing_letter.all(),
+				})
+			
+	return render(request, 'title/title_edit.html', {'title': title, 'form': form})
 	
 def title_delete(request, pk):
 	title = Title.objects.get(pk=pk)
