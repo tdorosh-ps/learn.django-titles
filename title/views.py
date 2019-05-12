@@ -134,6 +134,9 @@ class TitleEditForm(forms.Form):
 def title_edit(request, title_id):
 	title = Title.objects.get(pk=title_id)
 	if request.method == 'POST':
+		if request.POST.get('cancel_button') is not None:
+			return HttpResponseRedirect('{}?status_message=Редагування титулу відмінено'.format(reverse('title:home')))
+			
 		form = TitleEditForm(request.POST)
 		if form.is_valid():
 			title.title = form.cleaned_data['title']
