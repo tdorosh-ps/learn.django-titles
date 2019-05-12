@@ -2,6 +2,10 @@ from django.contrib import admin
 from .models import Title, IncomingLetter, OutgoingLetter, Counterparty
 # Register your models here.
 
+def make_done(modeladmin, request, queryset):
+	queryset.update(is_done=True)
+	
+make_done.short_description = 'Make titles done'
 
 class TitleAdmin(admin.ModelAdmin):
 	fieldsets = [
@@ -12,6 +16,7 @@ class TitleAdmin(admin.ModelAdmin):
 	search_fields = ['title']
 	list_display = ['title', 'type', 'client', 'ministry_agreement', 'is_done', 'notes']
 	list_filter = ['type', 'client']
+	actions = [make_done]
 	
 	
 
