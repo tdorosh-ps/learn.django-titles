@@ -4,5 +4,10 @@
 {% block title_page %} Видалити Титул {% endblock title_page %}
 
 {% block content %} 
-Тут буде форма видалення титулу {{ title }}
+<form action="{% url 'title:title_delete' title.id %}" method='post'>
+{% csrf_token %}
+<p>Ви дійсно хочете видалити титул {{ title }}?</p>
+<input type='submit' value='Видалити' id='delete_button' name='delete_button'>
+<input type='submit' value='Скасувати' id='cancel_button' name='cancel_button'>
+</form>
 {% endblock content %}

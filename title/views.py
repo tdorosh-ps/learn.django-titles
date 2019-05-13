@@ -12,6 +12,10 @@ def get_unique_list_elements(elements):
 		if el not in unique_elements:
 			unique_elements.append(el)
 	return unique_elements
+	
+def title_detail(request, title_id):
+	title = Title.objects.get(pk=title_id)
+	return render(request, 'title/title_detail.html', {'title': title})
 
 def title_list(request):
 	titles = Title.objects.all()
@@ -161,6 +165,45 @@ def title_edit(request, title_id):
 			
 	return render(request, 'title/title_edit.html', {'title': title, 'form': form})
 	
-def title_delete(request, pk):
-	title = Title.objects.get(pk=pk)
+def title_delete(request, title_id):
+	title = Title.objects.get(pk=title_id)
+	if request.method == 'POST':
+		if request.POST.get('cancel_button') is not None:
+			return HttpResponseRedirect('{}?status_message=Видалення титулу скасовано'.format(reverse('title:home')))
+			
+		if request.POST.get('delete_button') is not None:
+			title.delete()
+			return HttpResponseRedirect('{}?status_message=Титул успішно видалений.'.format(reverse('title:home')))
+			
 	return render(request, 'title/title_delete.html', {'title': title})
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

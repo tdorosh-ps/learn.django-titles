@@ -9,5 +9,6 @@
   {{ form.as_p }}
   <input type='submit' value='Внести зміни' id='submit_button' name='submit_button'>
   <input type='submit' value='Скасувати' id='cancel_button' name='cancel_button'>
+  <button type='button'><a href="{% url 'title:title_delete' title.id %}">Видалити</a></button>
 </form>
 {% endblock content %}

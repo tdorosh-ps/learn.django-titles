@@ -1,0 +1,45 @@
+{% extends 'title/base.html' %}
+
+{% block meta_title %} Облік титулів {% endblock meta_title %}
+{% block title_page %} Перегляд титулу {% endblock title_page %}
+
+{% block content %} 
+
+<div class='row'>
+  <div class='col'>
+    <table class='table table-bordered table-hover'>
+	  <thead>
+	    <tr class='table-primary'>
+		  <td>Назва титулу</td>
+		  <td>Тип титулу</td>
+		  <td>Замовник</td>
+		  <td>Вхідні листи</td>
+		  <td>Вихідні листи</td>
+		  <td>Погодження Міністерства</td>
+		  <td>Виконано</td>
+		  <td>Примітки</td>
+		</tr>
+	  </thead>
+	  
+	  <tbody>
+	    <tr>
+		   <td>{{ title.title }}</td>
+		   <td>{{ title.get_type_display }}</td>
+		   <td>{{ title.client }}</td>
+		   <td>{% for title in title.incoming_letter.all %}{{ title }}<br>{% endfor%}</td>
+		   <td>{% for title in title.outgoing_letter.all %}{{ title }}<br>{% endfor%}</td>
+		   <td>{{ title.ministry_agreement }}</td>
+		   <td>{{ title.is_done }}</td>
+		   <td>{{ title.notes }}</td>
+		</tr>
+	    
+	  </tbody>
+	
+	
+	</table>
+  </div>
+</div>
+
+<button><a href="{% url 'title:title_edit' title.id  %}">Редагувати</a></button>
+
+{% endblock content %}
