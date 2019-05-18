@@ -217,31 +217,3 @@ class CounterpartyAddView(CreateView):
 	def get_success_url(self):
 		return '{}?status_message=Контрагент успішно доданий.'.format(reverse('title:titles_list'))
 	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
