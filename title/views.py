@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django import forms
@@ -190,6 +191,12 @@ def title_delete(request, title_id):
 
 
 #Incoming Letters Views
+
+class InlettersListView(ListView):
+	pass
+
+class InletterDetailView(DetailView):
+	pass
 	
 def inletter_add(request):
 	form = InletterAddForm()
@@ -204,8 +211,46 @@ def inletter_add(request):
 	
 	return render(request, 'title/inletter_add.html', {'form': form})
 	
+class InletterEditView(UpdateView):
+	pass
+	
+class InletterDeleteView(DeleteView):
+	pass
+	
+#Outgoing Letters Views
+
+class OutlettersListView(ListView):
+	pass
+
+class OutletterDetailView(DetailView):
+	pass
+	
+class OutletterAddView(CreateView):
+	pass
+	
+class OutletterEditView(UpdateView):
+	pass
+	
+class OutletterDeleteView(DeleteView):
+	pass
 	
 	
+#Counterparties Views
+
+class CounterpartiesListView(ListView):
+	pass
+
+class CounterpartyDetailView(DetailView):
+	pass
+	
+class CounterpartyAddView(CreateView):
+	pass
+	
+class CounterpartyEditView(UpdateView):
+	pass
+	
+class CounterpartyDeleteView(DeleteView):
+	pass
 	
 	
 	
