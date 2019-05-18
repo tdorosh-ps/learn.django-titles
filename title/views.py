@@ -12,10 +12,36 @@ def get_unique_list_elements(elements):
 		if el not in unique_elements:
 			unique_elements.append(el)
 	return unique_elements
+
+
+#Realize html form with django forms
+class TitleEditForm(forms.Form):
+	titles = Title.objects.all()
+	clients = Counterparty.objects.all()
+	inletters = IncomingLetter.objects.all()
+	outletters = OutgoingLetter.objects.all()
+	TITLE_TYPES = (
+		('OB', "Титул об'єкта будівництва"),
+		('PVR', 'Титул на проектно-вишукуальні роботи'),
+	)
+	title = forms.CharField(label='Назва титулу', strip=True, min_length=20, widget=forms.Textarea)
+	type = forms.ChoiceField(label='Тип титулу', choices=TITLE_TYPES)
+	client = forms.ModelChoiceField(label='Замовник', queryset=clients)
+	incoming_letters = forms.ModelMultipleChoiceField(label='Вхідні листи', required=False, queryset=inletters)
+	outgoing_letters = forms.ModelMultipleChoiceField(label='Вихідні листи', required=False, queryset=outletters)
+	agreement = forms.BooleanField(label='Погодження міністерства', required=False)
+	done = forms.BooleanField(label='Виконано', required=False)
+	notes = forms.CharField(label='Примітки', strip=True, required=False, widget=forms.Textarea)
+	datetime = forms.DateTimeField(label='Дата і час занесення в базу')
+
+#Realize html form with django model forms	
+class InletterAddForm(forms.ModelForm):
 	
-def title_detail(request, title_id):
-	title = Title.objects.get(pk=title_id)
-	return render(request, 'title/title_detail.html', {'title': title})
+	class Meta:
+		model = IncomingLetter
+		fields = '__all__'
+
+#Titles Views
 
 def titles_list(request):
 	titles = Title.objects.all()
@@ -55,6 +81,10 @@ def titles_list(request):
 		
 	
 	return render(request, 'title/titles_list.html', {'titles': titles, 'years': years, 'months': months, 'clients': clients})
+	
+def title_detail(request, title_id):
+	title = Title.objects.get(pk=title_id)
+	return render(request, 'title/title_detail.html', {'title': title})
 	
 def title_add(request):
 	titles = Title.objects.all()
@@ -115,26 +145,6 @@ def title_add(request):
 	return render(request, 'title/title_add.html', {'titles': titles, 'clients': clients, 'inletters': inletters, 'outletters': outletters})
 	
 	
-class TitleEditForm(forms.Form):
-	titles = Title.objects.all()
-	clients = Counterparty.objects.all()
-	inletters = IncomingLetter.objects.all()
-	outletters = OutgoingLetter.objects.all()
-	TITLE_TYPES = (
-		('OB', "Титул об'єкта будівництва"),
-		('PVR', 'Титул на проектно-вишукуальні роботи'),
-	)
-	title = forms.CharField(label='Назва титулу', strip=True, min_length=20, widget=forms.Textarea)
-	type = forms.ChoiceField(label='Тип титулу', choices=TITLE_TYPES)
-	client = forms.ModelChoiceField(label='Замовник', queryset=clients)
-	incoming_letters = forms.ModelMultipleChoiceField(label='Вхідні листи', required=False, queryset=inletters)
-	outgoing_letters = forms.ModelMultipleChoiceField(label='Вихідні листи', required=False, queryset=outletters)
-	agreement = forms.BooleanField(label='Погодження міністерства', required=False)
-	done = forms.BooleanField(label='Виконано', required=False)
-	notes = forms.CharField(label='Примітки', strip=True, required=False, widget=forms.Textarea)
-	datetime = forms.DateTimeField(label='Дата і час занесення в базу')
-	
-	
 def title_edit(request, title_id):
 	title = Title.objects.get(pk=title_id)
 	if request.method == 'POST':
@@ -177,12 +187,9 @@ def title_delete(request, title_id):
 			
 	return render(request, 'title/title_delete.html', {'title': title})
 	
-	
-class InletterAddForm(forms.ModelForm):
-	
-	class Meta:
-		model = IncomingLetter
-		fields = '__all__'
+
+
+#Incoming Letters Views
 	
 def inletter_add(request):
 	form = InletterAddForm()
