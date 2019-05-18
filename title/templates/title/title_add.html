@@ -25,9 +25,10 @@
     <label for='client'>Виберіть замовника</label>
 	<select id='client' name='client'>
 	  {% for client in clients %}
-	  <option value='{{ client.client_id }}'>{{ client.client__name }}</option>
+	  <option value='{{ client.id}}'>{{ client.name }}</option>
 	  {% endfor %}
 	</select>
+	<a href="{% url 'title:counterparty_add' %}" target='_blank'>&#43;</a>
   </div>
   
   <div>
@@ -42,6 +43,7 @@
 	  <option value='{{ inletter.id }}'>{{ inletter }}</option>
 	{% endfor %}
 	</select>
+	<a href="{% url 'title:inletter_add' %}" target='_blank'>&#43;</a>
   </div>
   
   <div>
@@ -51,6 +53,7 @@
 	  <option value='{{ outletter.id  }}'>{{ outletter }}</option>
 	{% endfor %}
 	</select>
+	<a href="{% url 'title:outletter_add' %}" target='_blank'>&#43;</a>
   </div>
   
   <div>

@@ -6,15 +6,6 @@ from django import forms
 from .models import Title, IncomingLetter, OutgoingLetter, Counterparty
 # Create your views here.
 
-#Function for generate unique elements, not view (usefull for generate select option)
-def get_unique_list_elements(elements):
-	unique_elements = []
-	for el in elements:
-		if el not in unique_elements:
-			unique_elements.append(el)
-	return unique_elements
-
-
 #Realize html form with django forms
 class TitleEditForm(forms.Form):
 	titles = Title.objects.all()
@@ -89,7 +80,7 @@ def title_detail(request, title_id):
 	
 def title_add(request):
 	titles = Title.objects.all()
-	clients = get_unique_list_elements(titles.values("client_id", "client__name"))
+	clients = Counterparty.objects.all()
 	inletters = IncomingLetter.objects.all()
 	outletters = OutgoingLetter.objects.all()
 	
@@ -192,12 +183,6 @@ def title_delete(request, title_id):
 
 #Incoming Letters Views
 
-class InlettersListView(ListView):
-	pass
-
-class InletterDetailView(DetailView):
-	pass
-	
 def inletter_add(request):
 	form = InletterAddForm()
 	if request.method == 'POST':
@@ -211,47 +196,28 @@ def inletter_add(request):
 	
 	return render(request, 'title/inletter_add.html', {'form': form})
 	
-class InletterEditView(UpdateView):
-	pass
-	
-class InletterDeleteView(DeleteView):
-	pass
 	
 #Outgoing Letters Views
 
-class OutlettersListView(ListView):
-	pass
-
-class OutletterDetailView(DetailView):
-	pass
-	
 class OutletterAddView(CreateView):
-	pass
+	model = OutgoingLetter
+	template_name = 'title/outletter_add.html'
+	fields = '__all__'
 	
-class OutletterEditView(UpdateView):
-	pass
-	
-class OutletterDeleteView(DeleteView):
-	pass
-	
+	def get_success_url(self):
+		return '{}?status_message=Вихідний лист успішно доданий.'.format(reverse('title:titles_list'))
 	
 #Counterparties Views
-
-class CounterpartiesListView(ListView):
-	pass
-
-class CounterpartyDetailView(DetailView):
-	pass
 	
 class CounterpartyAddView(CreateView):
-	pass
+	model = Counterparty
+	template_name = 'title/counterparty_add.html'
+	fields = '__all__'
 	
-class CounterpartyEditView(UpdateView):
-	pass
+	def get_success_url(self):
+		return '{}?status_message=Контрагент успішно доданий.'.format(reverse('title:titles_list'))
 	
-class CounterpartyDeleteView(DeleteView):
-	pass
-	
+
 	
 	
 	

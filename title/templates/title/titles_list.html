@@ -5,12 +5,24 @@
 
 {% block content %} 
 <div class='row'>
-  <div class='col-8'>
-    <a class='btn btn-primary' href='{% url "title:title_add" %}'>Додати Титул</a>
+  <div class='col-2'>
+    <a class='btn btn-primary' href='{% url "title:title_add" %}'>&#43; Титул</a>
+  </div>
+  
+  <div class='col-2'>
+    <a class='btn btn-primary' href='{% url "title:inletter_add" %}'>&#43; Вхідний лист</a>
+  </div>
+  
+  <div class='col-2'>
+    <a class='btn btn-primary' href='{% url "title:outletter_add" %}'>&#43; Вихідний лист</a>
+  </div>
+  
+  <div class='col-2'>
+    <a class='btn btn-primary' href='{% url "title:counterparty_add" %}'>&#43; Контрагент</a>
   </div>
   
   <div class='col-4'>
-    <form action='{% url "title:home" %}' method='GET'>
+    <form action='{% url "title:titles_list" %}' method='GET'>
         <label for='search'>Пошук за назвою титулу</label>
         <input type='search' id='search' name='search'>
         <input type='submit' value='Знайти' name='search_button'>
@@ -94,7 +106,7 @@
 	  </div>
 	  
 	    <input type='submit' value='Застосувати' id='filtration_button' name='filtration_button'>
-		<button><a href='{% url 'title:home' %}'>Скинути фільтри</a></button>
+		<button><a href='{% url 'title:titles_list' %}'>Скинути фільтри</a></button>
 	  
 	</form>
   </div>
