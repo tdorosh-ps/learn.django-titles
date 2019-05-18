@@ -17,7 +17,7 @@ def title_detail(request, title_id):
 	title = Title.objects.get(pk=title_id)
 	return render(request, 'title/title_detail.html', {'title': title})
 
-def title_list(request):
+def titles_list(request):
 	titles = Title.objects.all()
 	clients = set([client['client_id__name'] for client in titles.values("client_id__name")])
 	years = titles.dates('entry_datetime', 'year')
@@ -65,7 +65,7 @@ def title_add(request):
 	if request.method == 'POST':
 		
 		if request.POST.get('cancel_button') is not None:
-			return HttpResponseRedirect('{}?status_message=Додавання титулу відмінено'.format(reverse('title:home')))
+			return HttpResponseRedirect('{}?status_message=Додавання титулу відмінено'.format(reverse('title:titles_list')))
 			
 		if request.POST.get('submit_button') is not None:
 			errors = {}
@@ -110,7 +110,7 @@ def title_add(request):
 				if outgoing_letters:
 					title.outgoing_letter.set(outgoing_letters)
 				title.save()
-				return HttpResponseRedirect('{}?status_message=Титул успішно додано'.format(reverse('title:home')))
+				return HttpResponseRedirect('{}?status_message=Титул успішно додано'.format(reverse('title:titles_list')))
 			
 	return render(request, 'title/title_add.html', {'titles': titles, 'clients': clients, 'inletters': inletters, 'outletters': outletters})
 	
@@ -139,7 +139,7 @@ def title_edit(request, title_id):
 	title = Title.objects.get(pk=title_id)
 	if request.method == 'POST':
 		if request.POST.get('cancel_button') is not None:
-			return HttpResponseRedirect('{}?status_message=Редагування титулу відмінено'.format(reverse('title:home')))
+			return HttpResponseRedirect('{}?status_message=Редагування титулу відмінено'.format(reverse('title:titles_list')))
 			
 		form = TitleEditForm(request.POST)
 		if form.is_valid():
@@ -153,7 +153,7 @@ def title_edit(request, title_id):
 			title.notes = form.cleaned_data['notes']
 			title.entry_datetime = form.cleaned_data['datetime']
 			title.save()
-			return HttpResponseRedirect('{}?status_message=Титул успішно відредаговано'.format(reverse('title:home')))
+			return HttpResponseRedirect('{}?status_message=Титул успішно відредаговано'.format(reverse('title:titles_list')))
 	
 	else:
 		form = TitleEditForm(initial={'title': title.title, 'type': title.type, 
@@ -169,13 +169,33 @@ def title_delete(request, title_id):
 	title = Title.objects.get(pk=title_id)
 	if request.method == 'POST':
 		if request.POST.get('cancel_button') is not None:
-			return HttpResponseRedirect('{}?status_message=Видалення титулу скасовано'.format(reverse('title:home')))
+			return HttpResponseRedirect('{}?status_message=Видалення титулу скасовано'.format(reverse('title:titles_list')))
 			
 		if request.POST.get('delete_button') is not None:
 			title.delete()
-			return HttpResponseRedirect('{}?status_message=Титул успішно видалений.'.format(reverse('title:home')))
+			return HttpResponseRedirect('{}?status_message=Титул успішно видалений.'.format(reverse('title:titles_list')))
 			
 	return render(request, 'title/title_delete.html', {'title': title})
+	
+	
+class InletterAddForm(forms.ModelForm):
+	
+	class Meta:
+		model = IncomingLetter
+		fields = '__all__'
+	
+def inletter_add(request):
+	form = InletterAddForm()
+	if request.method == 'POST':
+		if request.POST.get('cancel_button'):
+			return HttpResponseRedirect('{}?status_message=Додавання вхідного листа відмінено'.format(reverse('title:titles_list')))
+			
+		form = InletterAddForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return HttpResponseRedirect('{}?status_message=Вхідний лист успішно доданий.'.format(reverse('title:titles_list')))
+	
+	return render(request, 'title/inletter_add.html', {'form': form})
 	
 	
 	

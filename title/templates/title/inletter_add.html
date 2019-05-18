@@ -1,0 +1,17 @@
+{% extends 'title/base.html' %}
+
+{% block meta_title %} Додати Вхідний Лист {% endblock meta_title %}
+{% block title_page %} Додати Вхідний Лист {% endblock title_page %}
+
+{% block content %} 
+<form action='{% url "title:inletter_add" %}' method='POST'>
+{% csrf_token %}
+  
+  {{ form.as_p }}
+  
+  <div>
+    <input type='submit' value='Занести в базу даних' id='submit_button' name='submit_button'>
+  </div>
+
+</form>
+{% endblock content %}
