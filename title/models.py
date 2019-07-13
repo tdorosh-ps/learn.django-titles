@@ -6,7 +6,7 @@ from django.utils import timezone
 class Title(models.Model):
 	TITLE_TYPES = (
 		('OB', "Титул об'єкта будівництва"),
-		('PVR', 'Титул на проектно-вишукуальні роботи'),
+		('PVR', 'Титул на проектно-вишукувальні роботи'),
 	)
 		
 	title = models.TextField(verbose_name='Назва титулу')
