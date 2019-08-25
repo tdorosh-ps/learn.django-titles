@@ -100,7 +100,7 @@
 		
 		<div class='col-5'>  
 		    <label for='done'>Виконаний</label>
-			<input type='checkbox' id='done' name='done' {% if request.GET.done == 'on' %}checked{% endif %}>
+			<input type='checkbox' id='done' data-url="{% url 'title:titles_list' %}" name='done' {% if request.GET.done == 'on' %}checked{% endif %}>
 		</div>
 	    
 	  </div>
